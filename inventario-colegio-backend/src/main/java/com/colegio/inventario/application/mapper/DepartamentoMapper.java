@@ -1,7 +1,7 @@
 package com.colegio.inventario.application.mapper;
 
 import com.colegio.inventario.application.dto.DepartamentoDTO;
-import com.colegio.inventario.domain.catalogo.Departamento;
+import com.colegio.inventario.domain.catalogo.ubicacion.Departamento;
 
 public class DepartamentoMapper {
 
@@ -12,8 +12,6 @@ public class DepartamentoMapper {
                 d.getSeccion().getNombre(),
                 d.getEstado(),
                 d.getFechaCreacion(),
-                d.getDescripcion()
-        );
+                d.getDescripcion());
     }
 }
-

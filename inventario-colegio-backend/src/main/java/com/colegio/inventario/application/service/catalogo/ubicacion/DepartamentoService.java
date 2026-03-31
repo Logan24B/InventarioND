@@ -1,7 +1,5 @@
 package com.colegio.inventario.application.service.catalogo.ubicacion;
 
-import com.colegio.inventario.domain.catalogo.equipo.Marca;
-
 import com.colegio.inventario.application.dto.ubicacion.DepartamentoDTO;
 import com.colegio.inventario.application.mapper.ubicacion.DepartamentoMapper;
 import com.colegio.inventario.domain.catalogo.ubicacion.Departamento;
@@ -40,11 +38,9 @@ public class DepartamentoService {
     // OBTENER POR ID
     public Departamento obtenerPorId(Long id) {
         return repository.findById(id)
-                .orElseThrow(() ->
-                        new ResponseStatusException(
-                                HttpStatus.NOT_FOUND,
-                                "Departamento no encontrado con id: " + id
-                        ));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Departamento no encontrado con id: " + id));
     }
 
     // GUARDAR NUEVO
@@ -55,16 +51,14 @@ public class DepartamentoService {
                 departamento.getEdificio().getId() == null) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "El edificio es obligatorio"
-            );
+                    "El edificio es obligatorio");
         }
 
         if (departamento.getSeccion() == null ||
                 departamento.getSeccion().getId() == null) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "La sección es obligatoria"
-            );
+                    "La sección es obligatoria");
         }
 
         return repository.save(departamento);
@@ -103,11 +97,9 @@ public class DepartamentoService {
     public void eliminar(Long id) {
 
         Departamento departamento = repository.findById(id)
-                .orElseThrow(() ->
-                        new ResponseStatusException(
-                                HttpStatus.NOT_FOUND,
-                                "Departamento no encontrado con id: " + id
-                        ));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Departamento no encontrado con id: " + id));
 
         departamento.setEstado(false);
 
@@ -117,11 +109,9 @@ public class DepartamentoService {
     public Departamento reactivar(Long id) {
 
         Departamento departamento = repository.findById(id)
-                .orElseThrow(() ->
-                        new ResponseStatusException(
-                                HttpStatus.NOT_FOUND,
-                                "Departamento no encontrado con id: " + id
-                        ));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Departamento no encontrado con id: " + id));
 
         departamento.setEstado(true);
 

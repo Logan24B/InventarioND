@@ -1,6 +1,5 @@
 package com.colegio.inventario.domain.personal;
 
-import com.colegio.inventario.domain.personal.Cargo;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,4 +35,3 @@ public class Empleado {
     @JoinColumn(name = "Idcargo", nullable = false)
     private Cargo cargo;
 }
-
