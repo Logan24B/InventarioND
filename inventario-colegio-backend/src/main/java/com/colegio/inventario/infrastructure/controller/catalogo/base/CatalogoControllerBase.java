@@ -45,4 +45,11 @@ public abstract class CatalogoControllerBase<T extends CatalogoBase> {
         return service.actualizar(id, entidad); // reutiliza tu update parcial
     }
 
+    @PatchMapping("/{id}/estado")
+    public T cambiarEstado(@PathVariable Long id, @RequestBody EstadoDTO dto) {
+        return service.cambiarEstado(id, dto.estado());
+    }
+
+    public record EstadoDTO(Boolean estado) {}
+
 }

@@ -9,5 +9,7 @@ import java.util.List;
 @Repository
 public interface KitDetalleRepository extends JpaRepository<KitDetalle, Long> {
     List<KitDetalle> findByKitId(Long kitId);
+    List<KitDetalle> findByKitIdAndEstadoTrue(Long kitId);
     boolean existsByHardwareId(Long hardwareId);
+    boolean existsByHardwareIdAndEstadoTrue(Long hardwareId);
 }

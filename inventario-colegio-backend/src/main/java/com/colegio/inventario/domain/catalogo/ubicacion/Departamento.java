@@ -4,15 +4,11 @@ package com.colegio.inventario.domain.catalogo.ubicacion;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.SQLRestriction;
-import org.hibernate.annotations.SQLDelete;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "departamento")
-@SQLDelete(sql = "UPDATE departamento SET estado = false WHERE id = ?")
-@SQLRestriction("estado = true")
 @Getter
 @Setter
 public class Departamento {

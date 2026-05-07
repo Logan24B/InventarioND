@@ -20,4 +20,7 @@ public class Rom {
     @ManyToOne
     @JoinColumn(name = "IdTipo", nullable = false)
     private TipoRom tipoRom;
+
+    @Column(nullable = false)
+    private Boolean estado = true;
 }

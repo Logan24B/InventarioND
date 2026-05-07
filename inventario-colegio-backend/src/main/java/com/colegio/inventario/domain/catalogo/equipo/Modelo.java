@@ -54,6 +54,9 @@ public class Modelo {
     // OBSERVACIONES
     @Column(length = 250)
     private String observaciones;
+
+    @Column(nullable = false)
+    private Boolean estado = true;
 }
 
 

@@ -11,19 +11,9 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 public class SeccionesController extends CatalogoControllerBase<Secciones> {
 
-    private final SeccionesService seccionesService;
-
     public SeccionesController(SeccionesService seccionesService) {
         super(seccionesService);
-        this.seccionesService = seccionesService;
     }
-
-    @PatchMapping("/{id}/estado")
-    public Secciones cambiarEstado(@PathVariable Long id, @RequestBody EstadoDTO body) {
-        return seccionesService.cambiarEstado(id, body.estado());
-    }
-
-    public record EstadoDTO(Boolean estado) {}
 }
 
 

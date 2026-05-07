@@ -58,6 +58,11 @@ public class DepartamentoController {
         return service.reactivar(id);
     }
 
+    @PatchMapping("/{id}/estado")
+    public Departamento cambiarEstado(@PathVariable Long id, @RequestBody EstadoDTO dto) {
+        return service.cambiarEstado(id, dto.estado());
+    }
+
     @GetMapping("/page")
     public Page<Departamento> listarPaginado(Pageable pageable) {
         return service.listarPaginado(pageable);
@@ -67,5 +72,7 @@ public class DepartamentoController {
     public List<DepartamentoDTO> listarDTO() {
         return service.listarDTO();
     }
+
+    public record EstadoDTO(Boolean estado) {}
     
 }

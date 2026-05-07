@@ -17,15 +17,6 @@ public abstract class CatalogoConEstadoService<T extends CatalogoConEstadoBase>
         this.nombreEntidad = nombreEntidad;
     }
 
-    public T cambiarEstado(Long id, Boolean estado) {
-        if (estado == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El estado es obligatorio");
-        }
-        T actual = obtenerPorId(id);
-        actual.setEstado(estado);
-        return repo.save(actual);
-    }
-
     @Override
     public T actualizar(Long id, T dto) {
         T actual = obtenerPorId(id);

@@ -86,4 +86,14 @@ public class Ordenador {
 
     @Column(name = "fecha")
     private LocalDateTime fecha;
+
+    @PrePersist
+    protected void onCreate() {
+        if (estado == null) {
+            estado = true;
+        }
+        if (fecha == null) {
+            fecha = LocalDateTime.now();
+        }
+    }
 }

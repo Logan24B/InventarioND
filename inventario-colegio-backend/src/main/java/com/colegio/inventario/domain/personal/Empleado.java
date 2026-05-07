@@ -34,4 +34,7 @@ public class Empleado {
     @ManyToOne
     @JoinColumn(name = "Idcargo", nullable = false)
     private Cargo cargo;
+
+    @Column(nullable = false)
+    private Boolean estado = true;
 }

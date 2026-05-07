@@ -10,5 +10,6 @@ import java.util.Optional;
 @Repository
 public interface HardwareRepository extends JpaRepository<Hardware, Long> {
     Optional<Hardware> findBySerialNumber(String serialNumber);
+    Optional<Hardware> findBySerialNumberIgnoreCase(String serialNumber);
     List<Hardware> findByEstadoTrue();
 }

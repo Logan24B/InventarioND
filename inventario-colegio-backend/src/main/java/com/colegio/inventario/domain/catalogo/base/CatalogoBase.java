@@ -18,4 +18,7 @@ public abstract class CatalogoBase {
 
     @Column(length = 250)
     private String descripcion;
+
+    @Column(nullable = false)
+    private Boolean estado = true;
 }

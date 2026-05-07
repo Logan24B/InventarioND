@@ -1,7 +1,9 @@
 package com.colegio.inventario.application.service.catalogo.hardware;
 
 import com.colegio.inventario.domain.catalogo.hardware.Rom;
+import com.colegio.inventario.domain.catalogo.hardware.TipoRom;
 import com.colegio.inventario.domain.repository.catalogo.hardware.RomRepository;
+import com.colegio.inventario.domain.repository.catalogo.hardware.TipoRomRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -12,13 +14,15 @@ import java.util.List;
 public class RomService {
 
     private final RomRepository repo;
+    private final TipoRomRepository tipoRomRepository;
 
-    public RomService(RomRepository repo) {
+    public RomService(RomRepository repo, TipoRomRepository tipoRomRepository) {
         this.repo = repo;
+        this.tipoRomRepository = tipoRomRepository;
     }
 
     public List<Rom> listar() {
-        return repo.findAll();
+        return repo.findByEstadoTrue();
     }
 
     public Rom obtenerPorId(Long id) {
@@ -46,6 +50,11 @@ public class RomService {
             );
         }
 
+        rom.setTipoRom(obtenerTipoRomActivo(rom.getTipoRom().getId()));
+        if (rom.getEstado() == null) {
+            rom.setEstado(true);
+        }
+
         return repo.save(rom);
     }
 
@@ -63,19 +72,37 @@ public class RomService {
         }
 
         if (dto.getTipoRom() != null && dto.getTipoRom().getId() != null) {
-            actual.setTipoRom(dto.getTipoRom());
+            actual.setTipoRom(obtenerTipoRomActivo(dto.getTipoRom().getId()));
+        }
+
+        if (dto.getEstado() != null) {
+            actual.setEstado(dto.getEstado());
         }
 
         return repo.save(actual);
     }
 
     public void eliminar(Long id) {
-        if (!repo.existsById(id)) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "Rom no encontrado con id: " + id
-            );
+        Rom actual = obtenerPorId(id);
+        actual.setEstado(false);
+        repo.save(actual);
+    }
+
+    public Rom cambiarEstado(Long id, Boolean estado) {
+        if (estado == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El estado es obligatorio");
         }
-        repo.deleteById(id);
+        Rom actual = obtenerPorId(id);
+        actual.setEstado(estado);
+        return repo.save(actual);
+    }
+
+    private TipoRom obtenerTipoRomActivo(Long id) {
+        TipoRom tipoRom = tipoRomRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "El tipoRom no existe"));
+        if (Boolean.FALSE.equals(tipoRom.getEstado())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "No se puede asignar un tipoRom inactivo");
+        }
+        return tipoRom;
     }
 }

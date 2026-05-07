@@ -1,11 +1,11 @@
 package com.colegio.inventario.infrastructure.controller.catalogo.hardware;
 
-import com.colegio.inventario.infrastructure.controller.catalogo.base.CatalogoControllerBase;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.colegio.inventario.application.service.catalogo.hardware.CategoriaOrdenadorService;
 import com.colegio.inventario.domain.catalogo.hardware.CategoriaOrdenador;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.colegio.inventario.infrastructure.controller.catalogo.base.CatalogoControllerBase;
 
 @RestController
 @RequestMapping("/api/categorias-ordenador")

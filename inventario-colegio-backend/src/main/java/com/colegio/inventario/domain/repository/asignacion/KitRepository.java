@@ -10,4 +10,5 @@ import java.util.List;
 public interface KitRepository extends JpaRepository<Kit, Long> {
     List<Kit> findByEstadoTrue();
     boolean existsByOrdenadorId(Long ordenadorId);
+    boolean existsByOrdenadorIdAndEstadoTrue(Long ordenadorId);
 }

@@ -40,4 +40,14 @@ public class KitDetalle {
 
     @Column(length = 250)
     private String observaciones;
+
+    @PrePersist
+    protected void onCreate() {
+        if (estado == null) {
+            estado = true;
+        }
+        if (fecha == null) {
+            fecha = LocalDate.now();
+        }
+    }
 }

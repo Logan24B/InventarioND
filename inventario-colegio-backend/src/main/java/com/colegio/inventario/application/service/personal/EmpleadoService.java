@@ -1,6 +1,8 @@
 package com.colegio.inventario.application.service.personal;
 
 import com.colegio.inventario.domain.personal.Empleado;
+import com.colegio.inventario.domain.personal.Cargo;
+import com.colegio.inventario.domain.repository.personal.CargoRepository;
 import com.colegio.inventario.domain.repository.personal.EmpleadoRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -12,13 +14,15 @@ import java.util.List;
 public class EmpleadoService {
 
     private final EmpleadoRepository repo;
+    private final CargoRepository cargoRepository;
 
-    public EmpleadoService(EmpleadoRepository repo) {
+    public EmpleadoService(EmpleadoRepository repo, CargoRepository cargoRepository) {
         this.repo = repo;
+        this.cargoRepository = cargoRepository;
     }
 
     public List<Empleado> listar() {
-        return repo.findAll();
+        return repo.findByEstadoTrue();
     }
 
     @SuppressWarnings("null")
@@ -45,10 +49,11 @@ public class EmpleadoService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El cargo es obligatorio");
         }
 
-        empleado.setNombre1(empleado.getNombre1().trim());
-        if (empleado.getNombre2() != null) empleado.setNombre2(empleado.getNombre2().trim());
-        empleado.setApellido1(empleado.getApellido1().trim());
-        if (empleado.getApellido2() != null) empleado.setApellido2(empleado.getApellido2().trim());
+        normalizar(empleado);
+        empleado.setCargo(obtenerCargoActivo(empleado.getCargo().getId()));
+        if (empleado.getEstado() == null) {
+            empleado.setEstado(true);
+        }
 
         if (repo.existsByNombre1IgnoreCaseAndApellido1IgnoreCase(
                 empleado.getNombre1(), empleado.getApellido1())) {
@@ -86,19 +91,44 @@ public class EmpleadoService {
         }
 
         if (dto.getCargo() != null && dto.getCargo().getId() != null) {
-            actual.setCargo(dto.getCargo());
+            actual.setCargo(obtenerCargoActivo(dto.getCargo().getId()));
+        }
+
+        if (dto.getEstado() != null) {
+            actual.setEstado(dto.getEstado());
         }
 
         return repo.save(actual);
     }
 
     public void eliminar(Long id) {
-        if (!repo.existsById(id)) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "Empleado no encontrado con id: " + id
-            );
+        Empleado actual = obtenerPorId(id);
+        actual.setEstado(false);
+        repo.save(actual);
+    }
+
+    public Empleado cambiarEstado(Long id, Boolean estado) {
+        if (estado == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El estado es obligatorio");
         }
-        repo.deleteById(id);
+        Empleado actual = obtenerPorId(id);
+        actual.setEstado(estado);
+        return repo.save(actual);
+    }
+
+    private Cargo obtenerCargoActivo(Long id) {
+        Cargo cargo = cargoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "El cargo no existe"));
+        if (Boolean.FALSE.equals(cargo.getEstado())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "No se puede asignar un cargo inactivo");
+        }
+        return cargo;
+    }
+
+    private void normalizar(Empleado empleado) {
+        empleado.setNombre1(empleado.getNombre1().trim());
+        if (empleado.getNombre2() != null) empleado.setNombre2(empleado.getNombre2().trim());
+        empleado.setApellido1(empleado.getApellido1().trim());
+        if (empleado.getApellido2() != null) empleado.setApellido2(empleado.getApellido2().trim());
     }
 }

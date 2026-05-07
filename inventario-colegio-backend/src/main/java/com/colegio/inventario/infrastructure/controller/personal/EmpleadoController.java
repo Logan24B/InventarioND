@@ -42,4 +42,11 @@ public class EmpleadoController
     public void eliminar(@PathVariable Long id) {
         service.eliminar(id);
     }
+
+    @PatchMapping("/{id}/estado")
+    public Empleado cambiarEstado(@PathVariable Long id, @RequestBody EstadoDTO dto) {
+        return service.cambiarEstado(id, dto.estado());
+    }
+
+    public record EstadoDTO(Boolean estado) {}
 }

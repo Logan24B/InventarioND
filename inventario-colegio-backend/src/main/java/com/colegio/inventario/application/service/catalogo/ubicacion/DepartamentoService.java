@@ -118,7 +118,16 @@ public class DepartamentoService {
         return repository.save(departamento);
     }
 
+    public Departamento cambiarEstado(Long id, Boolean estado) {
+        if (estado == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El estado es obligatorio");
+        }
+        Departamento departamento = obtenerPorId(id);
+        departamento.setEstado(estado);
+        return repository.save(departamento);
+    }
+
     public Page<Departamento> listarPaginado(Pageable pageable) {
-        return repository.findAll(pageable);
+        return repository.findByEstadoTrue(pageable);
     }
 }

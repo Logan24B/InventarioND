@@ -43,4 +43,11 @@ public class HardwareController {
         service.eliminar(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<Hardware> cambiarEstado(@PathVariable Long id, @RequestBody EstadoDTO dto) {
+        return ResponseEntity.ok(service.cambiarEstado(id, dto.estado()));
+    }
+
+    public record EstadoDTO(Boolean estado) {}
 }

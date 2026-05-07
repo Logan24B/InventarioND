@@ -18,7 +18,7 @@ public abstract class CatalogoService<T extends CatalogoBase> {
     }
 
     public List<T> listar() {
-        return repo.findAll();
+        return repo.findByEstadoTrue();
     }
 
     public T obtenerPorId(Long id) {
@@ -58,14 +58,29 @@ public abstract class CatalogoService<T extends CatalogoBase> {
             actual.setNombre(nuevoNombre);
         }
 
-        actual.setDescripcion(entidad.getDescripcion());
+        if (entidad.getDescripcion() != null) {
+            actual.setDescripcion(entidad.getDescripcion());
+        }
+
+        if (entidad.getEstado() != null) {
+            actual.setEstado(entidad.getEstado());
+        }
+
         return repo.save(actual);
     }
 
     public void eliminar(Long id) {
-        if (!repo.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, nombreEntidad + " no encontrada");
+        T actual = obtenerPorId(id);
+        actual.setEstado(false);
+        repo.save(actual);
+    }
+
+    public T cambiarEstado(Long id, Boolean estado) {
+        if (estado == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El estado es obligatorio");
         }
-        repo.deleteById(id);
+        T actual = obtenerPorId(id);
+        actual.setEstado(estado);
+        return repo.save(actual);
     }
 }
